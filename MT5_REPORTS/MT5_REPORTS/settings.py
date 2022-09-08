@@ -61,6 +61,16 @@ WSGI_APPLICATION = 'MT5_REPORTS.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'mt5_real',
+#         'USER': 'MT5_DB',
+#         'PASSWORD': 'oguhwej743_209()',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#     }
+# }
 
 DATABASES = {
     'default': {
