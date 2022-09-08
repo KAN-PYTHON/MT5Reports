@@ -1,0 +1,43 @@
+body {font-family: Courier New;}
+table {margin-bottom: 20px;
+   border: 1px solid #dddddd;
+   border-collapse: collapse;}
+th {font-weight: bold;
+    padding: 5px;
+    background: #FF8C00;
+    border: 1px solid #000000;}
+td {border: 1px solid #000000;
+    padding: 5px;}
+tr:nth-child(odd) {background: white;}
+tr:nth-child(even) {background: #dddddd;}
+
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 0px;}
+
+.sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    color: #818181;
+    display: block;}
+
+.sidenav a:hover {color: #f1f1f1;}
+
+.main {
+    margin-left: 200px; /* Same as the width of the sidenav */
+    font-size: 14px; /* Increased text to enable scrolling */
+    padding: 0px 0px;}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}}
+

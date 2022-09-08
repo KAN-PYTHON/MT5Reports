@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %} {{ title }} {% endblock title%}
+
+{% block content %}
+<table>
+    <tr><th>#</th><th>Login</th><th>Name</th><th>Time</th><th>Profit</th><th>Comment</th><th>Action</th>
+    {% for item in deals %}
+    <tr>
+        <td align="right">{{item.Num}}</td>
+        <td align="right">{{item.Login}}</td>
+        <td align="left">{{item.Name}}</td>
+        <td align="center">{{item.Time|date:"Y-m-d H:i:s"}}</td>
+        <td align="right">{{item.Profit}}</td>
+        <td align="left">{{item.Comment}}</td>
+        <td align="left">{{item.Action}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}
