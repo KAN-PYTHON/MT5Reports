@@ -52,7 +52,49 @@ def abook_dangerous(request):
 
 
 def all_book_dangerous(request):
+    # from django.db import connection
+    # from .models import Mt5Users
+    # # from django.conf import
+    # #
+    # sql = "SELECT " \
+    #        "ROW_NUMBER() over (ORDER BY t.Login DESC ) as Num, " \
+    #        "t.Login as Login, " \
+    #        "u.Name as Name, " \
+    #        "t.UserGroup as UserGroup, " \
+    #        "COUNT(t.Login) as DealsTotal, " \
+    #        "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
+    #        "ROUND(SUM(t.Volume), 2) as VolumeTotal " \
+    #        "FROM _all_trades t, mt5_users u " \
+    #        "WHERE t.Login = u.Login and LOCATE('real', t.UserGroup) > 0 "\
+    #        "GROUP BY Login, UserGroup"
+
+    # with connection.cursor() as cursor:
+    #     cursor.execute(sql)
+    #     deals = cursor.fetchall()
+    #     print('=========================================')
+    #     print('=========================================')
+    #     for item in deals:
+    #         print(item[1])
+    #         print(type(item))
+
+    # print('=========================================')
+    # print('=========================================')
     deals = get_sql_result(sql_allbook_clients_report())
+    # for item in deals:
+    #     print(item)
+    #     print(type(item))
+    # deals = get_sql_result(sql_allbook_clients_report())
+
+    # print('=========================================')
+    # print('=========================================')
+    # users = Mt5Users.objects.all()
+    # for item in users:
+    #     print(item.firstname)
     context = {'deals': deals, 'title': 'BBook Dangerous clients report'}
     return render(request, 'dangerous_clients_report.html', context=context)
 
+
+def symbols_profit(request):
+    deals = get_sql_result(sql_symbols_profit())
+    context = {'deals': deals, 'title': 'Symbols profit report'}
+    return render(request, 'symbols_profit_report.html', context=context)

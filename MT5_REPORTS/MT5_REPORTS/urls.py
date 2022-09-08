@@ -10,5 +10,6 @@ urlpatterns = [
     path('bbook_dangerous/', views.bbook_dangerous, name='bbook_dangerous'),
     path('abook_dangerous/', views.abook_dangerous, name='abook_dangerous'),
     path('all_book_dangerous/', views.all_book_dangerous, name='all_book_dangerous'),
+    path('symbols_profit/', views.symbols_profit, name='symbols_profit'),
     path('admin/', admin.site.urls),
 ]

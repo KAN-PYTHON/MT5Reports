@@ -24,3 +24,11 @@ def get_sql_result(_sql):
     except Exception as _ex:
         print(f"{_ex}\nDB connection error!")
 
+
+def raw_sql():
+    from django.db import connection
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT * FROM mt5_deals')
+        row = cursor.fetchone()
+        print(row)
+
