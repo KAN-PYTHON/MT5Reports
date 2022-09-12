@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %} {{ title }} {% endblock title%}
+
+{% block content %}
+<table>
+    <tr><th>#</th><th>Login</th><th>Name</th><th>Group</th><th>Bonus</th><th>Deposit</th>
+    {% for item in deals %}
+    <tr>
+        <td align="right">{{item.Num}}</td>
+        <td align="right">{{item.Login}}</td>
+        <td align="left">{{item.Name}}</td>
+        <td align="left">{{item.Group}}</td>
+        <td align="right">{{item.Bonus}}</td>
+        <td align="right">{{item.Deposit}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

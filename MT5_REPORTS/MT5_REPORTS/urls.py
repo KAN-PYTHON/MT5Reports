@@ -16,6 +16,7 @@ urlpatterns = [
     path('zero_accounts/', views.zero_accounts, name='zero_accounts'),
     path('all_book_dangerous/', views.all_book_dangerous, name='all_book_dangerous'),
     path('symbols_profit/', views.symbols_profit, name='symbols_profit'),
+    path('welcome_bonus_report/', views.welcome_bonus_report, name='welcome_bonus_report'),
     path('bonus100_report/', views.bonus100_report, name='bonus100_report'),
     path('admin/', admin.site.urls),
 ]

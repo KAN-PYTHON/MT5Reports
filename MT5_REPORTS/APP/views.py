@@ -138,3 +138,9 @@ def bonus100_report(request):
     finish_date = finish_date.strftime('%Y-%m-%d')
     context = {'deals': deals, 'title': 'Correction report from ' + start_date + ' to ' + finish_date}
     return render(request, 'finance_report.html', context=context)
+
+
+def welcome_bonus_report(request):
+    deals = get_sql_result(sql_welcome_bonus_report())
+    context = {'deals': deals, 'title': 'Welcome bonus report'}
+    return render(request, 'welcome_bonus_report.html', context=context)

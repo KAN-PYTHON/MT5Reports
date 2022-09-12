@@ -152,3 +152,11 @@ def sql_bonus100_report(_group_mask, _start_date, _finish_date, _action):
            "d.Profit = 100 and " \
            "LOCATE('" + _group_mask + "', u.Group) > 0 " \
            "ORDER BY Time DESC "
+
+
+def sql_welcome_bonus_report():
+    return "SELECT ROW_NUMBER() over (ORDER BY Login DESC) as Num, Login, Name, `Group`, SUM(Bonus) as Bonus, " \
+           "SUM(Deposit) as Deposit " \
+           "FROM _welcome_bonus " \
+           "GROUP BY Login, Name, `Group` HAVING SUM(Bonus) > 0 and SUM(Deposit) > 0 " \
+           "ORDER BY Login DESC "
