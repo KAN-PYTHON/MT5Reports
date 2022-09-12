@@ -125,3 +125,30 @@ def sql_inactive_report(_group_mask, _start_date):
            "WHERE " \
            "LastAccess < " + _start_date + " and " \
            "LOCATE('" + _group_mask + "', `Group`) > 0 "
+
+
+def sql_bonus100_report(_group_mask, _start_date, _finish_date, _action):
+    import datetime
+
+    _start_date = datetime.datetime.now() + datetime.timedelta(days=-int(_start_date))
+    _start_date = "'" + _start_date.strftime('%Y-%m-%d') + "'"
+    _finish_date = datetime.datetime.now() + datetime.timedelta(days=int(_finish_date))
+    _finish_date = "'" + _finish_date.strftime('%Y-%m-%d') + "'"
+
+    return "SELECT " \
+           "ROW_NUMBER() over (ORDER BY d.Time DESC) as Num, " \
+           "d.Login as Login, " \
+           "u.FirstName as Name, " \
+           "d.Time as Time, " \
+           "d.Action as Action, " \
+           "d.Profit as Profit, " \
+           "d.Comment as Comment " \
+           "FROM mt5_deals d, mt5_users u " \
+           "WHERE " \
+           "d.Action in " + _action + " and " \
+           "d.Time > " + _start_date + " and " \
+           "d.Time < " + _finish_date + " and " \
+           "d.Login = u.Login and " \
+           "d.Profit = 100 and " \
+           "LOCATE('" + _group_mask + "', u.Group) > 0 " \
+           "ORDER BY Time DESC "

@@ -125,7 +125,16 @@ def open_positions(request):
 
 
 def inactive_users(request):
-    print(sql_inactive_report('real', 30))
-    deals = get_sql_result(sql_inactive_report('real', -30))
+    deals = get_sql_result(sql_inactive_report('real', 30))
     context = {'deals': deals, 'title': 'Inactive users report last 30 days'}
     return render(request, 'inactive_users_report.html', context=context)
+
+
+def bonus100_report(request):
+    deals = get_sql_result(sql_bonus100_report('real', 10000, 1, '(6)'))
+    start_date = datetime.datetime.now() + datetime.timedelta(days=-10000)
+    start_date = start_date.strftime('%Y-%m-%d')
+    finish_date = datetime.datetime.now() + datetime.timedelta(days=1)
+    finish_date = finish_date.strftime('%Y-%m-%d')
+    context = {'deals': deals, 'title': 'Correction report from ' + start_date + ' to ' + finish_date}
+    return render(request, 'finance_report.html', context=context)
