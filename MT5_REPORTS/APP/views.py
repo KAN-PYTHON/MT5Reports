@@ -122,3 +122,10 @@ def open_positions(request):
     deals = get_sql_result(sql_open_positions_report())
     context = {'deals': deals, 'title': 'Open positions report '}
     return render(request, 'dangerous_clients_report.html', context=context)
+
+
+def inactive_users(request):
+    print(sql_inactive_report('real', 30))
+    deals = get_sql_result(sql_inactive_report('real', -30))
+    context = {'deals': deals, 'title': 'Inactive users report last 30 days'}
+    return render(request, 'inactive_users_report.html', context=context)

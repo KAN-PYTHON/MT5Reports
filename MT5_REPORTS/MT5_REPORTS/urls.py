@@ -11,6 +11,7 @@ urlpatterns = [
     path('abook_dangerous/', views.abook_dangerous, name='abook_dangerous'),
     path('abook_all/', views.abook_all, name='abook_all'),
     path('bbook_all/', views.bbook_all, name='bbook_all'),
+    path('inactive_users/', views.inactive_users, name='inactive_users'),
     path('open_positions/', views.open_positions, name='open_positions'),
     path('zero_accounts/', views.zero_accounts, name='zero_accounts'),
     path('all_book_dangerous/', views.all_book_dangerous, name='all_book_dangerous'),

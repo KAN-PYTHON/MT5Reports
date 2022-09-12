@@ -93,8 +93,8 @@ def sql_abook_all_clients_report(_group_mask):
 def sql_zero_accounts_report():
     return "SELECT ROW_NUMBER() over (ORDER BY u.Login DESC) as Num, u.Login as Login, u.LastAccess Last, " \
            "u.Name as Name, u.`Group` as UserGroup, u.Balance as Balance, u.Credit as Credit " \
-           "FROM mt5_users u, mt5_deals d " \
-           "WHERE u.Login  NOT IN (SELECT d.Login FROM mt5_deals d) and LOCATE('real', u.Group) > 0 " \
+           "FROM mt5_users u " \
+           "LEFT JOIN mt5_deals d ON u.Login = d.Login WHERE d.Login is null and LOCATE('real', u.Group) > 0 " \
            "GROUP BY u.Login "
 
 
@@ -110,3 +110,18 @@ def sql_open_positions_report():
            "FROM mt5_users u, mt5_positions p " \
            "WHERE u.Login = p.Login and LOCATE('real', u.Group) > 0 " \
            "GROUP BY u.Login "
+
+
+def sql_inactive_report(_group_mask, _start_date):
+    import datetime
+
+    _start_date = datetime.datetime.now() + datetime.timedelta(days=-int(_start_date))
+    _start_date = "'" + _start_date.strftime('%Y-%m-%d') + "'"
+
+    return "SELECT " \
+           "ROW_NUMBER() over (ORDER BY LastAccess DESC) as Num, Login, LastAccess, Name, `Group`, " \
+           "Balance, Credit " \
+           "FROM mt5_users " \
+           "WHERE " \
+           "LastAccess < " + _start_date + " and " \
+           "LOCATE('" + _group_mask + "', `Group`) > 0 "
