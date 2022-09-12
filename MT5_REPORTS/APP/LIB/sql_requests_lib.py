@@ -96,3 +96,17 @@ def sql_zero_accounts_report():
            "FROM mt5_users u, mt5_deals d " \
            "WHERE u.Login  NOT IN (SELECT d.Login FROM mt5_deals d) and LOCATE('real', u.Group) > 0 " \
            "GROUP BY u.Login "
+
+
+def sql_open_positions_report():
+    return "SELECT " \
+           "ROW_NUMBER() over (ORDER BY u.Login DESC) as Num, " \
+           "u.Login as Login, " \
+           "u.Name as Name, " \
+           "u.`Group` as UserGroup, " \
+           "COUNT(p.Position) as DealsTotal, " \
+           "ROUND(SUM(p.Profit), 2) as ProfitTotal, " \
+           "ROUND(SUM(p.Volume / 10000), 2) as VolumeTotal " \
+           "FROM mt5_users u, mt5_positions p " \
+           "WHERE u.Login = p.Login and LOCATE('real', u.Group) > 0 " \
+           "GROUP BY u.Login "

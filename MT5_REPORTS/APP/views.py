@@ -116,3 +116,9 @@ def zero_accounts(request):
     deals = get_sql_result(sql_zero_accounts_report())
     context = {'deals': deals, 'title': 'Zero accounts report '}
     return render(request, 'all_clients_report.html', context=context)
+
+
+def open_positions(request):
+    deals = get_sql_result(sql_open_positions_report())
+    context = {'deals': deals, 'title': 'Open positions report '}
+    return render(request, 'dangerous_clients_report.html', context=context)
