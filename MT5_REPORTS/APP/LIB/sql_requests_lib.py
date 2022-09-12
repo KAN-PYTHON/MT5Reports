@@ -77,3 +77,13 @@ def sql_symbols_profit():
            "ROUND(SUM(t.Volume), 2) as VolumeTotal " \
            "FROM _all_trades t " \
            "GROUP BY Symbol"
+
+
+def sql_abook_all_clients_report(_group_mask):
+    return "SELECT ROW_NUMBER() over (ORDER BY u.Login DESC) as Num, u.Login as Login, u.LastAccess Last, " \
+           "u.Name as Name, " \
+           "u.`Group` as UserGroup, u.Balance as Balance, u.Credit as Credit, COUNT(d.Login) as Deals " \
+           "FROM mt5_users u, mt5_deals d " \
+           "WHERE u.Login = d.Login and " \
+           "LOCATE('" + _group_mask + "', u.Group) > 0 " \
+           "GROUP BY u.Login HAVING Deals > 0"

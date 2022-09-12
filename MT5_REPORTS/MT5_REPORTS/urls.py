@@ -9,6 +9,8 @@ urlpatterns = [
     path('correction_report/', views.correction_report, name='correction_report'),
     path('bbook_dangerous/', views.bbook_dangerous, name='bbook_dangerous'),
     path('abook_dangerous/', views.abook_dangerous, name='abook_dangerous'),
+    path('abook_all/', views.abook_all, name='abook_all'),
+    path('bbook_all/', views.bbook_all, name='bbook_all'),
     path('all_book_dangerous/', views.all_book_dangerous, name='all_book_dangerous'),
     path('symbols_profit/', views.symbols_profit, name='symbols_profit'),
     path('admin/', admin.site.urls),

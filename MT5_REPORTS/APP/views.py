@@ -98,3 +98,15 @@ def symbols_profit(request):
     deals = get_sql_result(sql_symbols_profit())
     context = {'deals': deals, 'title': 'Symbols profit report'}
     return render(request, 'symbols_profit_report.html', context=context)
+
+
+def abook_all(request):
+    deals = get_sql_result(sql_abook_all_clients_report('abook'))
+    context = {'deals': deals, 'title': 'A Book report All '}
+    return render(request, 'all_clients_report.html', context=context)
+
+
+def bbook_all(request):
+    deals = get_sql_result(sql_abook_all_clients_report('bbook'))
+    context = {'deals': deals, 'title': 'B Book report All '}
+    return render(request, 'all_clients_report.html', context=context)
