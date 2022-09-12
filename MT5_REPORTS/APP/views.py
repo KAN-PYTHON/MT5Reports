@@ -110,3 +110,9 @@ def bbook_all(request):
     deals = get_sql_result(sql_abook_all_clients_report('bbook'))
     context = {'deals': deals, 'title': 'B Book report All '}
     return render(request, 'all_clients_report.html', context=context)
+
+
+def zero_accounts(request):
+    deals = get_sql_result(sql_zero_accounts_report())
+    context = {'deals': deals, 'title': 'Zero accounts report '}
+    return render(request, 'all_clients_report.html', context=context)

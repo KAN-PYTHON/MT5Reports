@@ -85,5 +85,14 @@ def sql_abook_all_clients_report(_group_mask):
            "u.`Group` as UserGroup, u.Balance as Balance, u.Credit as Credit, COUNT(d.Login) as Deals " \
            "FROM mt5_users u, mt5_deals d " \
            "WHERE u.Login = d.Login and " \
-           "LOCATE('" + _group_mask + "', u.Group) > 0 " \
+           "LOCATE('" + _group_mask + "', u.Group) > 0 and " \
+           "LOCATE('real', u.Group) > 0 " \
            "GROUP BY u.Login HAVING Deals > 0"
+
+
+def sql_zero_accounts_report():
+    return "SELECT ROW_NUMBER() over (ORDER BY u.Login DESC) as Num, u.Login as Login, u.LastAccess Last, " \
+           "u.Name as Name, u.`Group` as UserGroup, u.Balance as Balance, u.Credit as Credit " \
+           "FROM mt5_users u, mt5_deals d " \
+           "WHERE u.Login  NOT IN (SELECT d.Login FROM mt5_deals d) and LOCATE('real', u.Group) > 0 " \
+           "GROUP BY u.Login "
