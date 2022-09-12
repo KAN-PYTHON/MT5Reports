@@ -71,6 +71,8 @@ def sql_symbols_profit():
            "ROW_NUMBER() over (ORDER BY SUM(t.ProfitTotal) DESC ) as Num, " \
            "t.Symbol as Symbol, " \
            "COUNT(t.Login) as DealsTotal, " \
+           "ROUND(SUM(t.Storage), 2) as Storage, " \
+           "ROUND(SUM(t.Commission), 2) as Commission, " \
            "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
            "ROUND(SUM(t.Volume), 2) as VolumeTotal " \
            "FROM _all_trades t " \

@@ -61,27 +61,27 @@ WSGI_APPLICATION = 'MT5_REPORTS.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'mt5_real',
-#         'USER': 'MT5_DB',
-#         'PASSWORD': 'oguhwej743_209()',
-#         'HOST': '127.0.0.1',
-#         'PORT': '3306',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mt5',
-        'USER': 'mt5_tass_user',
-        'PASSWORD': 'der#18DF$=12',
-        'HOST': '89.108.65.107',
+        'NAME': 'mt5_real',
+        'USER': 'MT5_DB',
+        'PASSWORD': 'oguhwej743_209()',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'mt5',
+#         'USER': 'mt5_tass_user',
+#         'PASSWORD': 'der#18DF$=12',
+#         'HOST': '89.108.65.107',
+#         'PORT': '3306',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

@@ -3,13 +3,15 @@
 
 {% block content %}
 <table>
-    <tr><th>#</th><th>Symbol</th><th>Deals</th><th>Volume</th><th>Profit</th>
+    <tr><th>#</th><th>Symbol</th><th>Deals</th><th>Volume</th><th>Storage</th><th>Commission</th><th>Profit</th>
     {% for item in deals %}
     <tr>
         <td align="right">{{item.Num}}</td>
         <td align="right">{{item.Symbol}}</td>
         <td align="left">{{item.DealsTotal}}</td>
         <td align="center">{{item.VolumeTotal}}</td>
+        <td align="right">{{item.Storage}}</td>
+        <td align="right">{{item.Commission}}</td>
         <td align="right">{{item.ProfitTotal}}</td>
     </tr>
     {% endfor %}
