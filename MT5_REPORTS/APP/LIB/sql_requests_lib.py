@@ -32,7 +32,7 @@ def sql_bbook_clients_report():
            "t.UserGroup as UserGroup, " \
            "COUNT(t.Login) as DealsTotal, " \
            "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
-           "ROUND(SUM(t.Volume), 2) as VolumeTotal " \
+           "ROUND(SUM(t.Volume), 2) as VolumeTotal, HEX(u.Color) as Color " \
            "FROM _all_trades t, mt5_users u " \
            "WHERE t.Login = u.Login and LOCATE('bbook', t.UserGroup) > 0 "\
            "GROUP BY Login, UserGroup HAVING ProfitTotal > 0"
@@ -46,7 +46,7 @@ def sql_abook_clients_report():
            "t.UserGroup as UserGroup, " \
            "COUNT(t.Login) as DealsTotal, " \
            "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
-           "ROUND(SUM(t.Volume), 2) as VolumeTotal " \
+           "ROUND(SUM(t.Volume), 2) as VolumeTotal, HEX(u.Color) as Color " \
            "FROM _all_trades t, mt5_users u " \
            "WHERE t.Login = u.Login and LOCATE('abook', t.UserGroup) > 0 "\
            "GROUP BY Login, UserGroup HAVING ProfitTotal < 0"
@@ -155,8 +155,9 @@ def sql_bonus100_report(_group_mask, _start_date, _finish_date, _action):
 
 
 def sql_welcome_bonus_report():
-    return "SELECT ROW_NUMBER() over (ORDER BY Login DESC) as Num, Login, Name, `Group`, SUM(Bonus) as Bonus, " \
-           "SUM(Deposit) as Deposit " \
+    return "SELECT ROW_NUMBER() over (ORDER BY Login DESC) as Num, Login, Name, `Group`, " \
+           "ROUND(SUM(Bonus), 2) as Bonus, " \
+           "ROUND(SUM(Deposit), 2) as Deposit " \
            "FROM _welcome_bonus " \
            "GROUP BY Login, Name, `Group` HAVING SUM(Bonus) > 0 and SUM(Deposit) > 0 " \
            "ORDER BY Login DESC "

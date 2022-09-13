@@ -41,13 +41,13 @@ def correction_report(request):
 
 def bbook_dangerous(request):
     deals = get_sql_result(sql_bbook_clients_report())
-    context = {'deals': deals, 'title': 'BBook Dangerous clients report'}
+    context = {'deals': deals, 'title': 'B Book Dangerous clients report'}
     return render(request, 'dangerous_clients_report.html', context=context)
 
 
 def abook_dangerous(request):
     deals = get_sql_result(sql_abook_clients_report())
-    context = {'deals': deals, 'title': 'BBook Dangerous clients report'}
+    context = {'deals': deals, 'title': 'A Book Dangerous clients report'}
     return render(request, 'dangerous_clients_report.html', context=context)
 
 
