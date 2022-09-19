@@ -144,3 +144,9 @@ def welcome_bonus_report(request):
     deals = get_sql_result(sql_welcome_bonus_report())
     context = {'deals': deals, 'title': 'Welcome bonus report'}
     return render(request, 'welcome_bonus_report.html', context=context)
+
+
+def commission_report(request):
+    deals = get_sql_result(sql_commission_report('abook'))
+    context = {'deals': deals, 'title': 'Welcome bonus report'}
+    return render(request, 'welcome_bonus_report.html', context=context)

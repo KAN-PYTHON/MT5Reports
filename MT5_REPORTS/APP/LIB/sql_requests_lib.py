@@ -161,3 +161,20 @@ def sql_welcome_bonus_report():
            "FROM _welcome_bonus " \
            "GROUP BY Login, Name, `Group` HAVING SUM(Bonus) > 0 and SUM(Deposit) > 0 " \
            "ORDER BY Login DESC "
+
+
+def sql_commission_report(_group_mask):
+    return "SELECT " \
+           "ROW_NUMBER() over (ORDER BY t.Login DESC ) as Num, " \
+           "t.Login as Login, " \
+           "u.Name as Name, " \
+           "t.UserGroup as UserGroup, " \
+           "COUNT(t.Login) as DealsTotal, " \
+           "ROUND(SUM(t.Volume), 2) as VolumeTotal " \
+           "ROUND(SUM(t.Storage), 2) as StorageTotal, " \
+           "ROUND(SUM(t.Commission), 2) as CommissionTotal, " \
+           "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
+           "FROM _all_trades t, mt5_users u " \
+           "WHERE t.Login = u.Login and LOCATE('real', t.UserGroup) > 0 and " \
+           "LOCATE('" + _group_mask + "', u.Group) > 0 and LOCATE('real', u.Group) > 0 " \
+           "GROUP BY Login, UserGroup "
