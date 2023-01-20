@@ -68,7 +68,7 @@ DATABASES = {
         'USER': 'MT5_DB',
         'PASSWORD': 'oguhwej743_209()',
         'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'PORT': '4406',
     }
 }
 

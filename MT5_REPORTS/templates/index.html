@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %} Home {% endblock title%}
 {% block content %}
-    Главнючая страница :)
+    {% load static %}
+    <img alt="logo" src="{% static 'image/tass-logo.png' %}" style="width:300px">
 {% endblock content %}

@@ -1,6 +1,10 @@
 def sql_finance_report(_group_mask, _start_date, _finish_date, _action):
-    import datetime
+    '''
+    Выбираем сделки, которые подходят по типу, от счетов из определенных групп
+    и совершены в определенное время, нумеруем и сортируем по времени совершения
+    '''
 
+    import datetime
     _start_date = datetime.datetime.now() + datetime.timedelta(days=-int(_start_date))
     _start_date = "'" + _start_date.strftime('%Y-%m-%d') + "'"
     _finish_date = datetime.datetime.now() + datetime.timedelta(days=int(_finish_date))
@@ -25,6 +29,10 @@ def sql_finance_report(_group_mask, _start_date, _finish_date, _action):
 
 
 def sql_bbook_clients_report():
+    '''
+    Из _all_trades (view в которой собраны закрытые и открытые сделки) группируем Profit и Volume
+    для каждого счета из групп B Book
+    '''
     return "SELECT " \
            "ROW_NUMBER() over (ORDER BY SUM(t.ProfitTotal) DESC ) as Num, " \
            "t.Login as Login, " \
@@ -34,11 +42,15 @@ def sql_bbook_clients_report():
            "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
            "ROUND(SUM(t.Volume), 2) as VolumeTotal, HEX(u.Color) as Color " \
            "FROM _all_trades t, mt5_users u " \
-           "WHERE t.Login = u.Login and LOCATE('bbook', t.UserGroup) > 0 "\
+           "WHERE t.Login = u.Login and LOCATE('bbook', t.UserGroup) > 0 and t.Time > '2022.12.30' " \
            "GROUP BY Login, UserGroup HAVING ProfitTotal > 0"
 
 
 def sql_abook_clients_report():
+    '''
+    Из _all_trades (view в которой собраны закрытые и открытые сделки) группируем Profit и Volume
+    для каждого счета из групп A Book
+    '''
     return "SELECT " \
            "ROW_NUMBER() over (ORDER BY SUM(t.ProfitTotal)) as Num, " \
            "t.Login as Login, " \
@@ -48,11 +60,17 @@ def sql_abook_clients_report():
            "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
            "ROUND(SUM(t.Volume), 2) as VolumeTotal, HEX(u.Color) as Color " \
            "FROM _all_trades t, mt5_users u " \
-           "WHERE t.Login = u.Login and LOCATE('abook', t.UserGroup) > 0 "\
+           "WHERE t.Login = u.Login and LOCATE('abook', t.UserGroup) > 0 and t.Time > '2022.10.30' " \
            "GROUP BY Login, UserGroup HAVING ProfitTotal < 0"
 
 
 def sql_allbook_clients_report():
+    '''
+    Из _all_trades (view в которой собраны закрытые и открытые сделки) группируем Profit и Volume
+    для каждого счета из групп real
+
+    * Фильтр по группам real нужно вставить во все запросы!!!
+    '''
     return "SELECT " \
            "ROW_NUMBER() over (ORDER BY t.Login DESC ) as Num, " \
            "t.Login as Login, " \
@@ -62,11 +80,17 @@ def sql_allbook_clients_report():
            "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
            "ROUND(SUM(t.Volume), 2) as VolumeTotal " \
            "FROM _all_trades t, mt5_users u " \
-           "WHERE t.Login = u.Login and LOCATE('real', t.UserGroup) > 0 "\
+           "WHERE t.Login = u.Login and LOCATE('real', t.UserGroup) > 0 " \
            "GROUP BY Login, UserGroup"
 
 
-def sql_symbols_profit():
+def sql_symbols_profit(_start_date):
+    '''
+    Из _all_trades (view в которой собраны закрытые и открытые сделки) группируем Profit и Volume
+    для каждого символа
+
+    * Не хватает Фильтра по группам real !!!
+    '''
     return "SELECT " \
            "ROW_NUMBER() over (ORDER BY SUM(t.ProfitTotal) DESC ) as Num, " \
            "t.Symbol as Symbol, " \
@@ -76,10 +100,15 @@ def sql_symbols_profit():
            "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
            "ROUND(SUM(t.Volume), 2) as VolumeTotal " \
            "FROM _all_trades t " \
-           "GROUP BY Symbol"
+           "WHERE t.Time >= '" + _start_date + "' and t.Login not in (1425, 1553) GROUP BY Symbol"
 
 
 def sql_abook_all_clients_report(_group_mask):
+    '''
+    Из таблицы mt5_users получаем данные о балансе, кредите и количестве сделок по каждому счету
+    с фильтрацией по маске групп, т.е. фактически это список активных ненулевых счетов
+    '''
+
     return "SELECT ROW_NUMBER() over (ORDER BY u.Login DESC) as Num, u.Login as Login, u.LastAccess Last, " \
            "u.Name as Name, " \
            "u.`Group` as UserGroup, u.Balance as Balance, u.Credit as Credit, COUNT(d.Login) as Deals " \
@@ -91,6 +120,10 @@ def sql_abook_all_clients_report(_group_mask):
 
 
 def sql_zero_accounts_report():
+    '''
+    Из таблицы mt5_users получаем список счетов по которым нет ни одной сделки,
+    т.е. фактически это список нулевых (неиспользуемых) счетов
+    '''
     return "SELECT ROW_NUMBER() over (ORDER BY u.Login DESC) as Num, u.Login as Login, u.LastAccess Last, " \
            "u.Name as Name, u.`Group` as UserGroup, u.Balance as Balance, u.Credit as Credit " \
            "FROM mt5_users u " \
@@ -99,6 +132,9 @@ def sql_zero_accounts_report():
 
 
 def sql_open_positions_report():
+    '''
+    Получаем количество, профит и объем открытых позиций по реальным счетам
+    '''
     return "SELECT " \
            "ROW_NUMBER() over (ORDER BY u.Login DESC) as Num, " \
            "u.Login as Login, " \
@@ -113,6 +149,9 @@ def sql_open_positions_report():
 
 
 def sql_inactive_report(_group_mask, _start_date):
+    '''
+    Список счетов которых не было online определенное время с фильтрацией по маске групп
+    '''
     import datetime
 
     _start_date = datetime.datetime.now() + datetime.timedelta(days=-int(_start_date))
@@ -128,6 +167,9 @@ def sql_inactive_report(_group_mask, _start_date):
 
 
 def sql_bonus100_report(_group_mask, _start_date, _finish_date, _action):
+    '''
+    Список счетов которые получили бонус 100$ с фильтрацией по диапазону дат
+    '''
     import datetime
 
     _start_date = datetime.datetime.now() + datetime.timedelta(days=-int(_start_date))
@@ -151,10 +193,14 @@ def sql_bonus100_report(_group_mask, _start_date, _finish_date, _action):
            "d.Login = u.Login and " \
            "d.Profit = 100 and " \
            "LOCATE('" + _group_mask + "', u.Group) > 0 " \
-           "ORDER BY Time DESC "
+                                                                                                                          "ORDER BY Time DESC "
 
 
 def sql_welcome_bonus_report():
+    '''
+    Из _welcome_bonus (view, в которой union сделки типа deposit и credit)
+    список счетов, у которых есть и deposit и credit, т.е. все кто получил бонус за депозит
+    '''
     return "SELECT ROW_NUMBER() over (ORDER BY Login DESC) as Num, Login, Name, `Group`, " \
            "ROUND(SUM(Bonus), 2) as Bonus, " \
            "ROUND(SUM(Deposit), 2) as Deposit " \
@@ -164,17 +210,37 @@ def sql_welcome_bonus_report():
 
 
 def sql_commission_report(_group_mask):
-    return "SELECT " \
-           "ROW_NUMBER() over (ORDER BY t.Login DESC ) as Num, " \
-           "t.Login as Login, " \
-           "u.Name as Name, " \
-           "t.UserGroup as UserGroup, " \
-           "COUNT(t.Login) as DealsTotal, " \
-           "ROUND(SUM(t.Volume), 2) as VolumeTotal " \
-           "ROUND(SUM(t.Storage), 2) as StorageTotal, " \
-           "ROUND(SUM(t.Commission), 2) as CommissionTotal, " \
-           "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
-           "FROM _all_trades t, mt5_users u " \
-           "WHERE t.Login = u.Login and LOCATE('real', t.UserGroup) > 0 and " \
-           "LOCATE('" + _group_mask + "', u.Group) > 0 and LOCATE('real', u.Group) > 0 " \
-           "GROUP BY Login, UserGroup "
+    '''
+    Количество сделок типа buy или sell, объемы, профиты, комисии и спрэды, сгруппированные по счетам
+    '''
+    sql = "SELECT " \
+          "ROW_NUMBER() over (ORDER BY SUM(d.Commission)) as Num, " \
+          "d.Login as Login, " \
+          "u.Name as Name, " \
+          "u.Group as UserGroup, " \
+          "COUNT(d.Login) as DealsTotal, " \
+          "ROUND(SUM(d.Volume / 10000), 2) as VolumeTotal, " \
+          "ROUND(SUM(d.Storage), 2) as StorageTotal, " \
+          "ROUND(SUM(d.Commission), 2) as CommissionTotal, " \
+          "ROUND(SUM(d.Profit), 2) as ProfitTotal " \
+          "FROM mt5_deals d, mt5_users u " \
+          "WHERE d.Login = u.Login and d.Action IN (0, 1) and " \
+
+    if _group_mask == 'abook':
+        sql = sql + "LOCATE('real', u.Group) > 0 and d.Gateway > '' "
+    elif _group_mask == 'bbook':
+        sql = sql + "LOCATE('real', u.Group) > 0 and d.Gateway = '' "
+
+    sql = sql + "GROUP BY Login, UserGroup "
+    return sql
+
+def sql_payout_cancel():
+    '''
+    Список сделок с комментарием Payout
+    '''
+    sql = "SELECT u.Login, u.Name, d.Action, d.Profit, d.Time, d.Comment " \
+          "FROM mt5_deals as d, mt5_users as u " \
+          "WHERE d.Login = u.Login and Action IN (2) and " \
+          "LOCATE('real', u.Group) > 0 and LOCATE('Payout', d.Comment) " \
+          "ORDER BY u.Login, d.Time "
+    return sql

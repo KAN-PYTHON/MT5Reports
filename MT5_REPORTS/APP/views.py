@@ -10,7 +10,9 @@ def index(request):
 
 
 def bonus_report(request):
-    deals = get_sql_result(sql_finance_report('', 7, 1, '(3, 6)'))
+    deals = get_sql_result(sql_finance_report('real', 7, 1, '(3, 6)'))
+    print(sql_finance_report('', 7, 1, '(3, 6)'))
+    print(deals)
     start_date = datetime.datetime.now() + datetime.timedelta(days=-7)
     start_date = start_date.strftime('%Y-%m-%d')
     finish_date = datetime.datetime.now() + datetime.timedelta(days=1)
@@ -95,8 +97,9 @@ def all_book_dangerous(request):
 
 
 def symbols_profit(request):
-    deals = get_sql_result(sql_symbols_profit())
-    context = {'deals': deals, 'title': 'Symbols profit report'}
+    _start_date = '2023.01.03'
+    deals = get_sql_result(sql_symbols_profit(_start_date))
+    context = {'deals': deals, 'title': 'Symbols profit report', 'start_date': _start_date}
     return render(request, 'symbols_profit_report.html', context=context)
 
 
@@ -146,7 +149,15 @@ def welcome_bonus_report(request):
     return render(request, 'welcome_bonus_report.html', context=context)
 
 
-def commission_report(request):
+def abook_commission_report(request):
     deals = get_sql_result(sql_commission_report('abook'))
-    context = {'deals': deals, 'title': 'Welcome bonus report'}
-    return render(request, 'welcome_bonus_report.html', context=context)
+    context = {'deals': deals, 'title': 'Commission report'}
+    return render(request, 'commission_report.html', context=context)
+
+
+def bbook_commission_report(request):
+    print(sql_commission_report('bbook'))
+    deals = get_sql_result(sql_commission_report('bbook'))
+    context = {'deals': deals, 'title': 'Commission report'}
+    return render(request, 'commission_report.html', context=context)
+

@@ -18,5 +18,7 @@ urlpatterns = [
     path('symbols_profit/', views.symbols_profit, name='symbols_profit'),
     path('welcome_bonus_report/', views.welcome_bonus_report, name='welcome_bonus_report'),
     path('bonus100_report/', views.bonus100_report, name='bonus100_report'),
+    path('abook_commission_report/', views.abook_commission_report, name='abook_commission_report'),
+    path('bbook_commission_report/', views.bbook_commission_report, name='bbook_commission_report'),
     path('admin/', admin.site.urls),
 ]
