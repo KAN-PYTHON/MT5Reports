@@ -42,7 +42,9 @@ def sql_bbook_clients_report():
            "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
            "ROUND(SUM(t.Volume), 2) as VolumeTotal, HEX(u.Color) as Color " \
            "FROM _all_trades t, mt5_users u " \
-           "WHERE t.Login = u.Login and LOCATE('bbook', t.UserGroup) > 0 and t.Time > '2022.12.30' " \
+           "WHERE LastAccess > '2023.01.01' and t.Login = u.Login and LOCATE('bbook', t.UserGroup) > 0 " \
+           "and LOCATE('real', t.UserGroup) > 0 " \
+           "and t.Time > '2022.12.30' " \
            "GROUP BY Login, UserGroup HAVING ProfitTotal > 0"
 
 
@@ -100,7 +102,7 @@ def sql_symbols_profit(_start_date):
            "ROUND(SUM(t.ProfitTotal), 2) as ProfitTotal, " \
            "ROUND(SUM(t.Volume), 2) as VolumeTotal " \
            "FROM _all_trades t " \
-           "WHERE t.Time >= '" + _start_date + "' and t.Login not in (1425, 1553) GROUP BY Symbol"
+           "WHERE t.Time >= '" + _start_date + "' and t.Login not in (1425, 1553, 1669) GROUP BY Symbol"
 
 
 def sql_abook_all_clients_report(_group_mask):
@@ -243,4 +245,34 @@ def sql_payout_cancel():
           "WHERE d.Login = u.Login and Action IN (2) and " \
           "LOCATE('real', u.Group) > 0 and LOCATE('Payout', d.Comment) " \
           "ORDER BY u.Login, d.Time "
+    return sql
+
+
+def sql_volume_in_money():
+    '''
+    Отчет по объемам торговли клиентов в USD
+    '''
+    sql = "SELECT " \
+          "ROW_NUMBER() over (ORDER BY Login) as Num, Login, ROUND(SUM(DealsTotal), 2) as DealsTotal, " \
+          "ROUND(SUM(ProfitTotal), 2) as ProfitTotal, ROUND(SUM(VolumeTotalUsd), 2) as VolumeTotalUsd " \
+          "FROM " \
+          "(SELECT d.Login as Login, u.Name as Name, u.`Group` as UserGroup, COUNT(d.Login) as DealsTotal, " \
+          "ROUND(SUM(d.Profit + d.Storage + d.Commission), 2) as ProfitTotal, " \
+          "ROUND(SUM((d.VolumeExt * d.Price * d.ContractSize) / 100000000), 2) as VolumeTotalUsd " \
+          "FROM mt5_real.mt5_deals d, mt5_real.mt5_users u, mt5_real.mt5_symbols s " \
+          "WHERE " \
+          "d.Login = u.Login and d.Symbol = s.Symbol and d.RateMargin = 1 and Action in (0,1) and " \
+          "d.Time >= '2023.02.01' and d.Time < '2023.03.01' " \
+          "GROUP BY d.Login, u.`Group` " \
+          "UNION " \
+          "SELECT " \
+          "d.Login as Login, u.Name as Name, u.`Group` as UserGroup, COUNT(d.Login) as DealsTotal, " \
+          "ROUND(SUM(d.Profit + d.Storage + d.Commission), 2) as ProfitTotal, " \
+          "ROUND(SUM((d.VolumeExt * d.RateMargin * d.ContractSize) / 100000000), 2) as VolumeTotalUsd " \
+          "FROM mt5_real.mt5_deals d, mt5_real.mt5_users u, mt5_real.mt5_symbols s " \
+          "WHERE " \
+          "d.Login = u.Login and d.Symbol = s.Symbol and d.RateMargin != 1 and Action in (0,1) and " \
+          "d.Time >= '2023.02.01' and d.Time < '2023.03.01' " \
+          "GROUP BY d.Login, u.`Group` ) AS Query " \
+          "GROUP BY Login "
     return sql

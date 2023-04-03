@@ -10,8 +10,8 @@ def get_sql_result(_sql):
 
     DB_HOST = '127.0.0.1'
     DB_PORT = '4406'
-    DB_USER = 'MT5_DB'
-    DB_PASSWORD = 'oguhwej743_209()'
+    DB_USER = 'mt5_real'
+    DB_PASSWORD = 'caVi4RXc_uRiUeo*qdC6oF'
     DB_NAME = 'mt5_real'
 
     # DB_HOST = '89.108.65.107'

@@ -65,8 +65,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mt5_real',
-        'USER': 'MT5_DB',
-        'PASSWORD': 'oguhwej743_209()',
+        'USER': 'mt5_real',
+        'PASSWORD': 'caVi4RXc_uRiUeo*qdC6oF',
         'HOST': '127.0.0.1',
         'PORT': '4406',
     }
