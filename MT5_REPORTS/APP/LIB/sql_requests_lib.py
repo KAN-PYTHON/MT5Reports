@@ -218,6 +218,7 @@ def sql_commission_report(_group_mask):
     sql = "SELECT " \
           "ROW_NUMBER() over (ORDER BY SUM(d.Commission)) as Num, " \
           "d.Login as Login, " \
+
           "u.Name as Name, " \
           "u.Group as UserGroup, " \
           "COUNT(d.Login) as DealsTotal, " \
